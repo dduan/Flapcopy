@@ -1,9 +1,11 @@
 class Bird
   constructor: (scene, @fill='#000000')->
+    @acceleration = 1800 
+    @thrust = -660
     @x = scene.width * .1
     @y = scene.height * .4
     @height = @width = scene.height / 20
-    @ySpeed = thrust
+    @ySpeed = @thrust
     @lastTime = 0
 
   draw: (ctx)->
@@ -14,11 +16,12 @@ class Bird
 
   advanceFrame: (thisTime)->
     time = (thisTime - @lastTime) / 1000
-    bird.ySpeed += acceleration * time
+    bird.ySpeed += @acceleration * time
     bird.y += bird.ySpeed * time
     @lastTime = thisTime
 
 class Scene
+  @pipeThickness = 50
   constructor: (@horizon)->
   draw: (ctx)->
     if not @startTime
@@ -28,10 +31,8 @@ class Scene
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
 horizon = canvas.height * .95
-acceleration = 1800 
-thrust = -660
 started = false
-lastTime = 0
+
 bird = new Bird(canvas)
 
 render = ->
@@ -49,7 +50,7 @@ animateFrame = ->
 
 document.body.addEventListener 'keydown', (e) ->
   if started
-    bird.ySpeed = thrust
+    bird.ySpeed = bird.thrust
   else
     started = true
     bird.lastTime = new Date().getTime()
