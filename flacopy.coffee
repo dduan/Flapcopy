@@ -3,7 +3,7 @@ class Bird
     @x = scene.width * .1
     @y = scene.height * .4
     @height = @width = scene.height / 20
-    @velocity = thrust
+    @ySpeed = thrust
 
   draw: (ctx)->
     ctx.beginPath()
@@ -12,8 +12,8 @@ class Bird
     ctx.fill()
 
   advanceFrame: (time)->
-    bird.velocity += acceleration * time
-    bird.y += bird.velocity * time
+    bird.ySpeed += acceleration * time
+    bird.y += bird.ySpeed * time
 
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
@@ -41,7 +41,7 @@ animateFrame = ->
 
 document.body.addEventListener 'keydown', (e) ->
   if started
-    bird.velocity = thrust
+    bird.ySpeed = thrust
   else
     started = true
     lastTime = new Date().getTime()
