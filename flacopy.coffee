@@ -21,23 +21,43 @@ class Bird
     @lastTime = thisTime
 
 class Scene
-  @pipeThickness = 50
-  constructor: (@horizon)->
+  constructor: (canvas)->
+    @width = canvas.width
+    @horizon = canvas.height * .95
+    @xSpeed = 1.5
+
+    @pipeThickness = 50
+    @pipeGap = 200
+    # list of coordinates of the top left corner of the gap
+    @pipes = [{x: @width - 200, y: 200}]
+
+    @startTime = 0
+
   draw: (ctx)->
-    if not @startTime
-      startTime = new Date().getTime()
+    for _, topLeft of @pipes
+      ctx.fillStyle = 'red'
+      ctx.beginPath()
+      ctx.rect topLeft.x, 0, @pipeThickness, topLeft.y
+      ctx.fill()
+      ctx.rect topLeft.x, topLeft.y + @pipeGap, @pipeThickness, @horizon
+      ctx.fill()
+
+  advanceFrame: (thisTime)->
+    for i of @pipes
+      @pipes[i].x -= (thisTime - @startTime) / 1000 * @xSpeed
 
 
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
-horizon = canvas.height * .95
 started = false
 
-bird = new Bird(canvas)
+scene = new Scene canvas
+bird = new Bird canvas
 
 render = ->
   context.clearRect 0, 0, canvas.width, canvas.height
   bird.draw context
+  scene.draw context
   window.requestAnimationFrame render
 
 render()
@@ -45,7 +65,8 @@ render()
 animateFrame = ->
   thisTime = new Date().getTime()
   bird.advanceFrame thisTime
-  if bird.y < horizon
+  scene.advanceFrame thisTime
+  if bird.y < scene.horizon
     requestAnimationFrame animateFrame
 
 document.body.addEventListener 'keydown', (e) ->
@@ -53,5 +74,7 @@ document.body.addEventListener 'keydown', (e) ->
     bird.ySpeed = bird.thrust
   else
     started = true
-    bird.lastTime = new Date().getTime()
+    startTime = new Date().getTime()
+    bird.lastTime = startTime
+    scene.startTime = startTime
     animateFrame()
