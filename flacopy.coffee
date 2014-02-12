@@ -4,6 +4,7 @@ class Bird
     @y = scene.height * .4
     @height = @width = scene.height / 20
     @ySpeed = thrust
+    @lastTime = 0
 
   draw: (ctx)->
     ctx.beginPath()
@@ -11,9 +12,11 @@ class Bird
     ctx.fillStyle = @fill
     ctx.fill()
 
-  advanceFrame: (time)->
+  advanceFrame: (thisTime)->
+    time = (thisTime - @lastTime) / 1000
     bird.ySpeed += acceleration * time
     bird.y += bird.ySpeed * time
+    @lastTime = thisTime
 
 class Scene
   constructor: (@horizon)->
@@ -40,9 +43,7 @@ render()
 
 animateFrame = ->
   thisTime = new Date().getTime()
-  time = (thisTime - lastTime) / 1000
-  bird.advanceFrame time
-  lastTime = thisTime
+  bird.advanceFrame thisTime
   if bird.y < horizon
     requestAnimationFrame animateFrame
 
@@ -51,5 +52,5 @@ document.body.addEventListener 'keydown', (e) ->
     bird.ySpeed = thrust
   else
     started = true
-    lastTime = new Date().getTime()
+    bird.lastTime = new Date().getTime()
     animateFrame()
