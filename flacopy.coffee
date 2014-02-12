@@ -24,14 +24,14 @@ class Scene
   constructor: (canvas)->
     @width = canvas.width
     @horizon = canvas.height * .95
-    @xSpeed = 1.5
+    @xSpeed = 100
 
     @pipeThickness = 50
     @pipeGap = 200
     # list of coordinates of the top left corner of the gap
-    @pipes = [{x: @width - 200, y: 200}]
+    @pipes = [{x: @width, y: 200}]
 
-    @startTime = 0
+    @lastTime = 0
 
   draw: (ctx)->
     for _, topLeft of @pipes
@@ -44,8 +44,12 @@ class Scene
 
   advanceFrame: (thisTime)->
     for i of @pipes
-      @pipes[i].x -= (thisTime - @startTime) / 1000 * @xSpeed
-
+      @pipes[i].x -= (thisTime - @lastTime) / 1000 * @xSpeed
+    if (@width - @pipes[@pipes.length - 1].x) > @pipeThickness * 5.5
+      @pipes.push {x: @width, y: (@horizon - @pipeGap) * Math.random()}
+    if @pipes[0].x + @pipeThickness < 0
+      @pipes.splice(0, 1)
+    @lastTime = thisTime
 
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
@@ -76,5 +80,5 @@ document.body.addEventListener 'keydown', (e) ->
     started = true
     startTime = new Date().getTime()
     bird.lastTime = startTime
-    scene.startTime = startTime
+    scene.lastTime = startTime
     animateFrame()
