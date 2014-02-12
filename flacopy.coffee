@@ -1,35 +1,48 @@
+class Bird
+  constructor: (scene, @fill='#000000')->
+    @x = scene.width * .1
+    @y = scene.height * .4
+    @height = @width = scene.height / 20
+    @velocity = thrust
+
+  draw: (ctx)->
+    ctx.beginPath()
+    ctx.rect @x, @y, @width, @height
+    ctx.fillStyle = @fill
+    ctx.fill()
+
+  advanceFrame: (time)->
+    bird.velocity += acceleration * time
+    bird.y += bird.velocity * time
+
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
-reqAnim = window.requestAnimationFrame;
-env =
-  horizon: 500
-  acceleration: 100 
-velocity = 0
-hero =
-  'x': 50
-  'y': 50
-  'width': 50
-  'height': 50
-  'fill': '#000000'
+horizon = canvas.height * .95
+acceleration = 1800 
+thrust = -660
+started = false
+lastTime = 0
+bird = new Bird(canvas)
+
 render = ->
   context.clearRect 0, 0, canvas.width, canvas.height
-  context.beginPath()
-  context.rect hero.x, hero.y, hero.width, hero.height
-  context.fillStyle = hero.fill
-  context.fill()
-  reqAnim(render);
+  bird.draw context
+  window.requestAnimationFrame render
+
 render()
 
-beginTime = lastTime = new Date().getTime()
-animStep = ->
+animateFrame = ->
   thisTime = new Date().getTime()
   time = (thisTime - lastTime) / 1000
-  velocity += env.acceleration * time
-  hero.y += velocity * time
+  bird.advanceFrame time
   lastTime = thisTime
-  if hero.y < env.horizon
-    requestAnimationFrame animStep
+  if bird.y < horizon
+    requestAnimationFrame animateFrame
 
-animStep()
-setTimeout((->
-  velocity = -200), 500)
+document.body.addEventListener 'keydown', (e) ->
+  if started
+    bird.velocity = thrust
+  else
+    started = true
+    lastTime = new Date().getTime()
+    animateFrame()
