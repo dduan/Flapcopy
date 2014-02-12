@@ -51,6 +51,16 @@ class Scene
       @pipes.splice(0, 1)
     @lastTime = thisTime
 
+  pipeCollision: (box)->
+    for _, pipe of @pipes
+      boxMaxX = box.x + box.width
+      boxMaxY = box.y + box.height
+      pipeMaxX = pipe.x + @pipeThickness
+      if (box.y < pipe.y or boxMaxY > pipe.y + @pipeGap) and (boxMaxX > pipe.x and box.x < pipe.x or box.x < pipeMaxX and boxMaxX > pipeMaxX or box.x > pipe.x and boxMaxX < pipeMaxX)
+        return true
+      if pipe.x + @pipeThickness > boxMaxX
+        return false
+
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
 started = false
@@ -70,7 +80,7 @@ animateFrame = ->
   thisTime = new Date().getTime()
   bird.advanceFrame thisTime
   scene.advanceFrame thisTime
-  if bird.y < scene.horizon
+  if bird.y < scene.horizon and not scene.pipeCollision bird
     requestAnimationFrame animateFrame
 
 document.body.addEventListener 'keydown', (e) ->
