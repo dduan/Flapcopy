@@ -15,6 +15,13 @@ class Bird
     bird.ySpeed += acceleration * time
     bird.y += bird.ySpeed * time
 
+class Scene
+  constructor: (@horizon)->
+  draw: (ctx)->
+    if not @startTime
+      startTime = new Date().getTime()
+
+
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
 horizon = canvas.height * .95
