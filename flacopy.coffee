@@ -85,6 +85,11 @@ class Game
     @context.clearRect 0, 0, @canvas.width, @canvas.height
     @scene.draw @context
     @bird.draw @context
+    @context.fillStyle = 'white'
+    if not @started
+      @say 'Press any key to start.'
+    if @over
+      @say 'Press any key to restart.'
     window.requestAnimationFrame @render
   animateFrame: =>
     thisTime = new Date().getTime()
@@ -101,6 +106,10 @@ class Game
     @bird.lastTime = startTime
     @scene.lastTime = startTime
     @animateFrame()
+  say: (message, color)->
+    @context.fillStyle = color
+    @context.fillText message, 2, 10
+
 
 game = new Game 'canvas' 
 
