@@ -1,5 +1,5 @@
 class Bird
-  constructor: (scene, @fill='#000000')->
+  constructor: (scene, @fill='red')->
     @acceleration = 1800 
     @thrust = -660
     @x = scene.width * .1
@@ -14,12 +14,16 @@ class Bird
     ctx.rect @x, @y, @width, @height
     ctx.fillStyle = @fill
     ctx.fill()
+    #ctx.font = 'bold 24px'
+    context.fillText @score, @x, @y - 2
 
   advanceFrame: (thisTime)->
     time = (thisTime - @lastTime) / 1000
     bird.ySpeed += @acceleration * time
     bird.y += bird.ySpeed * time
     @lastTime = thisTime
+
+  flap: -> @ySpeed = @thrust
 
 class Scene
   constructor: (canvas)->
@@ -36,7 +40,7 @@ class Scene
 
   draw: (ctx)->
     for _, topLeft of @pipes
-      ctx.fillStyle = 'red'
+      ctx.fillStyle = 'black'
       ctx.beginPath()
       ctx.rect topLeft.x, 0, @pipeThickness, topLeft.y
       ctx.fill()
@@ -68,6 +72,7 @@ class Scene
 
 canvas = document.getElementById 'canvas'
 context = canvas.getContext '2d'
+
 started = false
 
 scene = new Scene canvas
@@ -75,24 +80,23 @@ bird = new Bird canvas
 
 render = ->
   context.clearRect 0, 0, canvas.width, canvas.height
-  bird.draw context
   scene.draw context
+  bird.draw context
   window.requestAnimationFrame render
 
 render()
 
 animateFrame = ->
   thisTime = new Date().getTime()
-  bird.advanceFrame thisTime
   scene.advanceFrame thisTime
+  bird.advanceFrame thisTime
   if bird.y < scene.horizon and not scene.pipeCollision bird
     requestAnimationFrame animateFrame
   else
-    console.log bird.score
 
 document.body.addEventListener 'keydown', (e) ->
   if started
-    bird.ySpeed = bird.thrust
+    bird.flap()
   else
     started = true
     startTime = new Date().getTime()
