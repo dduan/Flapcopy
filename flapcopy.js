@@ -124,7 +124,7 @@
       this.render = __bind(this.render, this);
       this.highest = 0;
       this.canvas = document.getElementById(canvasId);
-      if (window.innerWidth < 800) {
+      if (window.innerWidth < 768) {
         this.canvas.width = 320;
         this.canvas.height = 480;
       }

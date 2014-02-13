@@ -73,7 +73,7 @@ class Game
   constructor: (canvasId)->
     @highest = 0
     @canvas = document.getElementById canvasId
-    if window.innerWidth < 800
+    if window.innerWidth < 768
       @canvas.width = 320
       @canvas.height = 480
     @context = canvas.getContext '2d'
