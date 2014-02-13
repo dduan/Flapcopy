@@ -28,10 +28,10 @@ class Scene
   constructor: (canvas)->
     @width = canvas.width
     @horizon = canvas.height * .95
-    @xSpeed = 100
+    @xSpeed = 120
 
     @pipeThickness = 50
-    @pipeGap = 200
+    @pipeGap = 180
     # list of coordinates of the top left corner of the gap
     @pipes = [{x: @width, y: 200, cleared: false}]
 
