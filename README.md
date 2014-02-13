@@ -1,5 +1,5 @@
 #Flap(co)py#
 
-An HTML5 game created between school classes by the auther.
+An HTML5 game created between school classes by the author.
 
-The inspiration came from the mobile game Flappy Bird.
+Inspired by the mobile game Flappy Bird.
