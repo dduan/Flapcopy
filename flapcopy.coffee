@@ -90,9 +90,9 @@ class Game
     @bird.draw @context
     @context.fillStyle = 'white'
     if not @started
-      @say 'Press any key to start.'
+      @say 'Press any key/tap to start.'
     if @over
-      @say 'Press any key to restart.'
+      @say 'Press any key/tap to restart.'
     window.requestAnimationFrame @render
   animateFrame: =>
     thisTime = new Date().getTime()

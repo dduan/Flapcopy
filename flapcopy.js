@@ -146,10 +146,10 @@
       this.bird.draw(this.context);
       this.context.fillStyle = 'white';
       if (!this.started) {
-        this.say('Press any key to start.');
+        this.say('Press any key/tap to start.');
       }
       if (this.over) {
-        this.say('Press any key to restart.');
+        this.say('Press any key/tap to restart.');
       }
       return window.requestAnimationFrame(this.render);
     };
