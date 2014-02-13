@@ -1,5 +1,5 @@
 class Bird
-  constructor: (scene, @fill='red')->
+  constructor: (scene, @highest=0, @fill='red')->
     @acceleration = 1800 
     @thrust = -660
     @x = scene.width * .1
@@ -14,6 +14,7 @@ class Bird
     ctx.rect @x, @y, @width, @height
     ctx.fillStyle = @fill
     ctx.fill()
+    ctx.fillText "#{@score}/#{@highest}", @x, @y - 2
 
   advanceFrame: (thisTime)->
     time = (thisTime - @lastTime) / 1000
@@ -38,7 +39,7 @@ class Scene
 
   draw: (ctx)->
     for _, topLeft of @pipes
-      ctx.fillStyle = 'black'
+      ctx.fillStyle = 'grey'
       ctx.beginPath()
       ctx.rect topLeft.x, 0, @pipeThickness, topLeft.y
       ctx.fill()
@@ -78,22 +79,18 @@ class Game
     @started = false
     @over = false
     @scene = new Scene @canvas
-    @bird = new Bird @canvas
+    @bird = new Bird @canvas, @highest
     @render()
   render: =>
     @context.clearRect 0, 0, @canvas.width, @canvas.height
     @scene.draw @context
-    @context.fillText "#{@bird.score}/#{@highest}", @bird.x, @bird.y - 2
     @bird.draw @context
-    that = @
     window.requestAnimationFrame @render
   animateFrame: =>
     thisTime = new Date().getTime()
     @scene.advanceFrame thisTime
     @bird.advanceFrame thisTime
-    that = @
     if @bird.y < @scene.horizon and not @scene.pipeCollision @bird
-      #requestAnimationFrame (-> that.animateFrame.apply(@))
       requestAnimationFrame @animateFrame
     else
       @highest = @bird.score if @bird.score > @highest
@@ -108,6 +105,7 @@ class Game
 game = new Game 'canvas' 
 
 document.body.addEventListener 'keydown', (e) ->
+  e.preventDefault()
   if game.started and not game.over
     game.bird.flap()
   else if game.over
