@@ -19,8 +19,8 @@ class Bird
 
   advanceFrame: (thisTime)->
     time = (thisTime - @lastTime) / 1000
-    bird.ySpeed += @acceleration * time
-    bird.y += bird.ySpeed * time
+    @ySpeed += @acceleration * time
+    @y += @ySpeed * time
     @lastTime = thisTime
 
   flap: -> @ySpeed = @thrust
