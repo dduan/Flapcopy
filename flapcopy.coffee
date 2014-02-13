@@ -1,10 +1,10 @@
 class Bird
   constructor: (scene, @highest=0, @fill='red')->
-    @acceleration = 1800 
-    @thrust = -660
+    @acceleration = 3 * scene.height 
+    @thrust = -(1.1 * scene.height)
     @x = scene.width * .1
     @y = scene.height * .4
-    @height = @width = scene.height / 20
+    @height = @width =  Math.min(scene.width, scene.height) / 20
     @ySpeed = @thrust
     @lastTime = 0
     @score = 0
@@ -28,10 +28,10 @@ class Scene
   constructor: (canvas)->
     @width = canvas.width
     @horizon = canvas.height * .95
-    @xSpeed = 120
+    @xSpeed = canvas.width * 0.1584
 
-    @pipeThickness = 50
-    @pipeGap = 180
+    @pipeThickness = canvas.width * .0651
+    @pipeGap = canvas.height * .3
     # list of coordinates of the top left corner of the gap
     @pipes = [{x: @width, y: 200, cleared: false}]
 
@@ -74,8 +74,8 @@ class Game
     @highest = 0
     @canvas = document.getElementById canvasId
     if window.innerWidth < 768
-      @canvas.width = 320
-      @canvas.height = 480
+      @canvas.width = window.innerWidth
+      @canvas.height = window.innerHeight
     @context = canvas.getContext '2d'
     @reset()
   reset: ->

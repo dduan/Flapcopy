@@ -7,11 +7,11 @@
     function Bird(scene, highest, fill) {
       this.highest = highest != null ? highest : 0;
       this.fill = fill != null ? fill : 'red';
-      this.acceleration = 1800;
-      this.thrust = -660;
+      this.acceleration = 3 * scene.height;
+      this.thrust = -(1.1 * scene.height);
       this.x = scene.width * .1;
       this.y = scene.height * .4;
-      this.height = this.width = scene.height / 20;
+      this.height = this.width = Math.min(scene.width, scene.height) / 20;
       this.ySpeed = this.thrust;
       this.lastTime = 0;
       this.score = 0;
@@ -45,9 +45,9 @@
     function Scene(canvas) {
       this.width = canvas.width;
       this.horizon = canvas.height * .95;
-      this.xSpeed = 120;
-      this.pipeThickness = 50;
-      this.pipeGap = 180;
+      this.xSpeed = canvas.width * 0.1584;
+      this.pipeThickness = canvas.width * .0651;
+      this.pipeGap = canvas.height * .3;
       this.pipes = [
         {
           x: this.width,
@@ -125,8 +125,8 @@
       this.highest = 0;
       this.canvas = document.getElementById(canvasId);
       if (window.innerWidth < 768) {
-        this.canvas.width = 320;
-        this.canvas.height = 480;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
       }
       this.context = canvas.getContext('2d');
       this.reset();
