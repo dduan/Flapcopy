@@ -14,8 +14,6 @@ class Bird
     ctx.rect @x, @y, @width, @height
     ctx.fillStyle = @fill
     ctx.fill()
-    #ctx.font = 'bold 24px'
-    context.fillText @score, @x, @y - 2
 
   advanceFrame: (thisTime)->
     time = (thisTime - @lastTime) / 1000
@@ -70,36 +68,49 @@ class Scene
       if pipe.x > boxMaxX
         return false
 
-canvas = document.getElementById 'canvas'
-context = canvas.getContext '2d'
+class Game
+  constructor: (canvasId)->
+    @highest = 0
+    @canvas = document.getElementById canvasId
+    @context = canvas.getContext '2d'
+    @reset()
+  reset: ->
+    @started = false
+    @over = false
+    @scene = new Scene @canvas
+    @bird = new Bird @canvas
+    @render()
+  render: =>
+    @context.clearRect 0, 0, @canvas.width, @canvas.height
+    @scene.draw @context
+    @context.fillText "#{@bird.score}/#{@highest}", @bird.x, @bird.y - 2
+    @bird.draw @context
+    that = @
+    window.requestAnimationFrame @render
+  animateFrame: =>
+    thisTime = new Date().getTime()
+    @scene.advanceFrame thisTime
+    @bird.advanceFrame thisTime
+    that = @
+    if @bird.y < @scene.horizon and not @scene.pipeCollision @bird
+      #requestAnimationFrame (-> that.animateFrame.apply(@))
+      requestAnimationFrame @animateFrame
+    else
+      @highest = @bird.score if @bird.score > @highest
+      @over = true
+  start: ->
+    @started = true
+    startTime = new Date().getTime()
+    @bird.lastTime = startTime
+    @scene.lastTime = startTime
+    @animateFrame()
 
-started = false
-
-scene = new Scene canvas
-bird = new Bird canvas
-
-render = ->
-  context.clearRect 0, 0, canvas.width, canvas.height
-  scene.draw context
-  bird.draw context
-  window.requestAnimationFrame render
-
-render()
-
-animateFrame = ->
-  thisTime = new Date().getTime()
-  scene.advanceFrame thisTime
-  bird.advanceFrame thisTime
-  if bird.y < scene.horizon and not scene.pipeCollision bird
-    requestAnimationFrame animateFrame
-  else
+game = new Game 'canvas' 
 
 document.body.addEventListener 'keydown', (e) ->
-  if started
-    bird.flap()
+  if game.started and not game.over
+    game.bird.flap()
+  else if game.over
+    game.reset()
   else
-    started = true
-    startTime = new Date().getTime()
-    bird.lastTime = startTime
-    scene.lastTime = startTime
-    animateFrame()
+    game.start()
