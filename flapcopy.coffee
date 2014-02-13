@@ -73,6 +73,9 @@ class Game
   constructor: (canvasId)->
     @highest = 0
     @canvas = document.getElementById canvasId
+    if window.innerWidth < 800
+      @canvas.width = 320
+      @canvas.height = 480
     @context = canvas.getContext '2d'
     @reset()
   reset: ->
@@ -110,10 +113,7 @@ class Game
     @context.fillStyle = color
     @context.fillText message, 2, 10
 
-
-game = new Game 'canvas' 
-
-document.body.addEventListener 'keydown', (e) ->
+changeState = (e)->
   e.preventDefault()
   if game.started and not game.over
     game.bird.flap()
@@ -121,3 +121,8 @@ document.body.addEventListener 'keydown', (e) ->
     game.reset()
   else
     game.start()
+
+game = new Game 'canvas'
+
+document.body.addEventListener 'keydown', changeState
+document.body.addEventListener 'touchstart', changeState

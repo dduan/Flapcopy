@@ -1,14 +1,18 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Flap(co)py</title>
-    <style type="text/css" media="screen">
-    body { text-align: center; }
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <!-- this is the part responsible for hidding the bottom bar -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <style type="text/css">
+    body { text-align: center; padding: 0px; margin: 0px;}
+    #canvas { background-color: black; }
     </style>
 </head>
 
 <body>
-    <canvas width='800' height='600' id='canvas' style='background-color: black'></canvas>
+    <canvas width='800px' height='600px' id='canvas'></canvas>
     <p><a href="https://github.com/DaNmarner/Flapcopy">Flap(co)py</a> by<a href="http://twitter.com/denialduan">@denialduan</a></p>
     <script src='flapcopy.js'></script>
     <script>
