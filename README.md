@@ -6,4 +6,4 @@ Works in canvas-enabled desktop and mobile browsers.
 
 Inspired by the mobile game Flappy Bird.
 
-[Play](http://danmarner.github.io/Flapcopy)
+[Play](http://dduan.github.io/Flapcopy)
